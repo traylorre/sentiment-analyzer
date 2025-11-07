@@ -1,24 +1,24 @@
 terraform {
-    required_version = ">= 1.0"
+  required_version = ">= 1.0"
 
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = "~> 5.0"
-        }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
+  }
 }
 
 provider "aws" {
-    region = var.aws_region
+  region = var.aws_region
 
-    default_tags {  # applies to all AWS resources
-        tags = {
-            Project = "sentiment-analyzer"
-            Environment = var.environment
-            ManagedBy = "terraform"
-        }
+  default_tags { # applies to all AWS resources
+    tags = {
+      Project     = "sentiment-analyzer"
+      Environment = var.environment
+      ManagedBy   = "terraform"
     }
+  }
 }
 
 # data.aws_caller_identity.current.account_id    # Your AWS Account ID
@@ -32,15 +32,15 @@ data "aws_region" "current" {}
 
 # create local variables throughout terraform
 locals {
-    account_id = data.aws_caller_identity.current.account_id
-    region = data.aws_region.current.name
-    name_prefix = "${var.project_name}-${var.environment}"
+  account_id  = data.aws_caller_identity.current.account_id
+  region      = data.aws_region.current.name
+  name_prefix = "${var.project_name}-${var.environment}"
 
-    # reusable map of tags that can be applied to resources
-    # similar to default_tags but specific per resources
-    common_tags = {
-        Phase = "phase-1"
-    }
+  # reusable map of tags that can be applied to resources
+  # similar to default_tags but specific per resources
+  common_tags = {
+    Phase = "phase-1"
+  }
 }
 
 #----------------------------------------------------------------------------
@@ -49,45 +49,45 @@ locals {
 
 # create SNS topic for publishing by ingestion lambda
 resource "aws_sns_topic" "tweet_events" {
-    # "sentiment-analyzer-dev-tweet-events"
-    name = "${local.name_prefix}-tweet-events"
-    display_name = "Tweet Events"
-    # AWS-managed encryption at rest
-    kms_master_key_id = "alias/aws/sns"
+  # "sentiment-analyzer-dev-tweet-events"
+  name         = "${local.name_prefix}-tweet-events"
+  display_name = "Tweet Events"
+  # AWS-managed encryption at rest
+  kms_master_key_id = "alias/aws/sns"
 
-    tags = merge(local.common_tags, {
-        Description = "Event distribution topic"
-    })
+  tags = merge(local.common_tags, {
+    Description = "Event distribution topic"
+  })
 }
 
 # Allow to publish to tweet_events SNS 
 # from any Lambda function in this AWS account
 resource "aws_sns_topic_policy" "tweet_events" {
-    arn = aws_sns_topic.tweet_events.arn
+  arn = aws_sns_topic.tweet_events.arn
 
-    policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-            {
-                # Human description for this policy
-                Sid = "AllowLambdaPublish"
-                # Allow vs Deny
-                Effect = "Allow"
-                # Caller is a Lambda service
-                Principal = {
-                    Service = "lambda.amazonaws.com"
-                }
-                # Action is to publish to SNS
-                Action = "SNS:Publish"
-                # Specific SNS being published to
-                Resource = aws_sns_topic.tweet_events.arn
-                # Caller is this account
-                Condition = {
-                    StringEquals = {
-                        "aws:SourceAccount" = local.account_id
-                    }
-                }
-            }
-        ]
-    })
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        # Human description for this policy
+        Sid = "AllowLambdaPublish"
+        # Allow vs Deny
+        Effect = "Allow"
+        # Caller is a Lambda service
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        # Action is to publish to SNS
+        Action = "SNS:Publish"
+        # Specific SNS being published to
+        Resource = aws_sns_topic.tweet_events.arn
+        # Caller is this account
+        Condition = {
+          StringEquals = {
+            "aws:SourceAccount" = local.account_id
+          }
+        }
+      }
+    ]
+  })
 }
