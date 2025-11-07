@@ -59,3 +59,35 @@ resource "aws_sns_topic" "tweet_events" {
         Description = "Event distribution topic"
     })
 }
+
+# Allow to publish to tweet_events SNS 
+# from any Lambda function in this AWS account
+resource "aws_sns_topic_policy" "tweet_events" {
+    arn = aws_sns_topic.tweet_events.arn
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                # Human description for this policy
+                Sid = "AllowLambdaPublish"
+                # Allow vs Deny
+                Effect = "Allow"
+                # Caller is a Lambda service
+                Principal = {
+                    Service = "lambda.amazonaws.com"
+                }
+                # Action is to publish to SNS
+                Action = "SNS:Publish"
+                # Specific SNS being published to
+                Resource = aws_sns_topic.tweet_events.arn
+                # Caller is this account
+                Condition = {
+                    StringEquals = {
+                        "aws:SourceAccount" = local.account_id
+                    }
+                }
+            }
+        ]
+    })
+}
