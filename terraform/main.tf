@@ -1,0 +1,61 @@
+terraform {
+    required_version = ">= 1.0"
+
+    required_providers {
+        aws = {
+            source = "hashicorp/aws"
+            version = "~> 5.0"
+        }
+    }
+}
+
+provider "aws" {
+    region = var.aws_region
+
+    default_tags {  # applies to all AWS resources
+        tags = {
+            Project = "sentiment-analyzer"
+            Environment = var.environment
+            ManagedBy = "terraform"
+        }
+    }
+}
+
+# data.aws_caller_identity.current.account_id    # Your AWS Account ID
+# data.aws_caller_identity.current.user_id       # The IAM user/role ID
+# data.aws_caller_identity.current.arn           # Full ARN of the caller
+data "aws_caller_identity" "current" {}
+# data.aws_region.current.name              # Region name ("us-east-2")
+# data.aws_region.current.endpoint          # AWS API endpoint for that region
+# data.aws_region.current.description       # Human-readable string
+data "aws_region" "current" {}
+
+# create local variables throughout terraform
+locals {
+    account_id = data.aws_caller_identity.current.account_id
+    region = data.aws_region.current.name
+    name_prefix = "${var.project_name}-${var.environment}"
+
+    # reusable map of tags that can be applied to resources
+    # similar to default_tags but specific per resources
+    common_tags = {
+        Phase = "phase-1"
+    }
+}
+
+#----------------------------------------------------------------------------
+# SNS Topic
+#----------------------------------------------------------------------------
+
+# create SNS topic for publishing by ingestion lambda
+resource "aws_sns_topic" "tweet_events" {
+    # "sentiment-analyzer-dev-tweet-events"
+    name = "${local.name_prefix}-tweet-events"
+    display_name = "Tweet Events"
+    # AWS-managed encryption at rest
+    kms_master_key_id = "alias/aws/sns"
+
+    tags = merge(local.common_tags, {
+        Description = "Event distribution topic"
+    })
+}
