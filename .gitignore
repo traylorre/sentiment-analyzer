@@ -1,0 +1,44 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Unit test / coverage
+.coverage
+.tox/
+.pytest_cache/
+
+# Distribution / Packaging
+.Python
+dist/
+build/
+venv/
+env/
+
+
+# AWS
+.aws/
+*.pem
+
+# IDE
+.vscode/ # VS Code
+.idea/   # IntelliJ IDEA
+*.swp    # Vim swap files
+.*.swp   # Vim swap files (of hidden)
+*~       # Emacs backup files
+
+# OS
+.DS_Store # OSX
+Thumbs.db # Windows
+# Env
+.env
+# Test outputs
+response*.json
+*.zip
