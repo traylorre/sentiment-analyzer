@@ -151,3 +151,51 @@ resource "aws_sqs_queue_policy" "sentiment_analysis" {
     ]
   })
 }
+#----------------------------------------------------------------------------
+# DynamoDB
+#----------------------------------------------------------------------------
+resource "aws_dynamodb_table" "tweets" {
+  name         = "${local.name_prefix}-tweets"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "tweet_id"
+  range_key    = "timestamp"
+
+  attribute {
+    name = "tweet_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "timestamp"
+    type = "N"
+  }
+
+  attribute {
+    name = "sentiment"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "sentiment-index"
+    hash_key        = "sentiment"
+    range_key       = "timestamp"
+    projection_type = "ALL"
+  }
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  server_side_encryption {
+    enabled = true
+  }
+
+  ttl {
+    attribute_name = "expire_at"
+    enabled        = true
+  }
+
+  tags = merge(local.common_tags, {
+    Purpose = "Tweet storage"
+  })
+}
