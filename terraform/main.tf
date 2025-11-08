@@ -199,3 +199,23 @@ resource "aws_dynamodb_table" "tweets" {
     Purpose = "Tweet storage"
   })
 }
+
+#-----------------------------------------------------------------------------
+# IAM Role
+#-----------------------------------------------------------------------------
+resource "aws_iam_role" "lambda_execution" {
+  name = "${local.name_prefix}-lambda-execution"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
