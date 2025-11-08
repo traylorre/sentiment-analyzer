@@ -91,3 +91,18 @@ resource "aws_sns_topic_policy" "tweet_events" {
     ]
   })
 }
+
+#----------------------------------------------------------------------------
+# SQS Queue
+#----------------------------------------------------------------------------
+# Dead Letter Queue
+resource "aws_sqs_queue" "sentiment_analysis_dlq" {
+  name                       = "${local.name_prefix}-sentiment-analysis-dlq"
+  message_retention_seconds  = 1209600 # 14 days for investigation
+  visibility_timeout_seconds = 600     # 10min for debugging
+  receive_wait_time_seconds  = 60      # 60s (longest poll) cheapest
+
+  tags = merge(local.common_tags, {
+    Purpose = "Dead letter queue"
+  })
+}
