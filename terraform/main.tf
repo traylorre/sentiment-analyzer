@@ -106,3 +106,21 @@ resource "aws_sqs_queue" "sentiment_analysis_dlq" {
     Purpose = "Dead letter queue"
   })
 }
+
+resource "aws_sqs_queue" "sentiment_analysis" {
+  name                       = "${local.name_prefix}-sentiment-analysis"
+  delay_seconds              = 0
+  max_message_size           = 262144 # 256K (default) may be overkill
+  message_retention_seconds  = 345600 # 4 days
+  receive_wait_time_seconds  = 10     # 10s (default 20s)
+  visibility_timeout_seconds = 60     # 60s time for Comprehend + DynamoDB
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.sentiment_analysis_dlq.arn
+    maxReceiveCount     = 3
+  })
+
+  tags = merge(local.common_tags, {
+    Purpose = "Sentiment analysis queue"
+  })
+}
