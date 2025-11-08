@@ -110,9 +110,9 @@ resource "aws_sqs_queue" "sentiment_analysis_dlq" {
 resource "aws_sqs_queue" "sentiment_analysis" {
   name                       = "${local.name_prefix}-sentiment-analysis"
   delay_seconds              = 0
-  max_message_size           = 262144 # 256K (default) may be overkill
+  max_message_size           = 65536  # 64K (default 256K)
   message_retention_seconds  = 345600 # 4 days
-  receive_wait_time_seconds  = 10     # 10s (default 20s)
+  receive_wait_time_seconds  = 20     # 20s (default 20s)
   visibility_timeout_seconds = 60     # 60s time for Comprehend + DynamoDB
 
   redrive_policy = jsonencode({
@@ -122,5 +122,32 @@ resource "aws_sqs_queue" "sentiment_analysis" {
 
   tags = merge(local.common_tags, {
     Purpose = "Sentiment analysis queue"
+  })
+}
+
+# SQS Queue Policy
+# Allow to SendMessage to sentiment analysis SQS
+# from any Lambda function in this AWS account
+resource "aws_sqs_queue_policy" "sentiment_analysis" {
+  queue_url = aws_sqs_queue.sentiment_analysis.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowSNSPublish"
+        Effect = "Allow"
+        Principal = {
+          Service = "sns.amazonaws.com"
+        }
+        Action   = "SQS:SendMessage"
+        Resource = aws_sqs_queue.sentiment_analysis.arn
+        Condition = {
+          ArnEquals = {
+            "aws:SourceArn" = aws_sns_topic.tweet_events.arn
+          }
+        }
+      }
+    ]
   })
 }
