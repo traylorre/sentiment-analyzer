@@ -219,3 +219,51 @@ resource "aws_iam_role" "lambda_execution" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "lambda_permissions" {
+  name = "${local.name_prefix}-lambda-permissions"
+  role = aws_iam_role.lambda_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "DynamoDBAccess"
+        Effect = "Allow"
+        Action = [
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Query"
+        ]
+        Resource = [
+          aws_dynamodb_table.tweets.arn,
+          "${aws_dynamodb_table.tweets.arn}/index/*"
+        ]
+      },
+      {
+        Sid      = "SNSPublish"
+        Effect   = "Allow"
+        Action   = ["sns:Publish"]
+        Resource = aws_sns_topic.tweet_events.arn
+      },
+      {
+        Sid      = "ComprehendAccess"
+        Effect   = "Allow"
+        Action   = ["comprehend:DetectSentiment"]
+        Resource = "*"
+      },
+      {
+        Sid    = "SQSAccess"
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = aws_sqs_queue.sentiment_analysis.arn
+      }
+    ]
+  })
+
+}
