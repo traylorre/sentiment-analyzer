@@ -1,7 +1,7 @@
 import json
 import os
 import boto3
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Initialize AWS clients (reused)
 sns_client = boto3.client('sns')
@@ -11,6 +11,11 @@ SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']  # Fail fast if missing
 
 def lambda_handler(event, context):
     try:
+        if not isinstance(event, dict):
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Invalid JSON'})
+            }
         body = json.loads(event.get('body', '{}')) if isinstance(event.get('body'), str) else event
 
         # Validate required fields
@@ -21,7 +26,7 @@ def lambda_handler(event, context):
                 'statusCode': 400,
                 'body': json.dumps({'error': f'Missing fields: {missing}'})
             }
-        time_now = datetime.now(datetime.utc).isoformat()
+        time_now = datetime.now(timezone.utc).isoformat()
 
         # Hydrate
         message = {
