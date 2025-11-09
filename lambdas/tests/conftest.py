@@ -55,7 +55,7 @@ def invalid_tweet_missing_text():
     }
 
 @pytest.fixture
-def invalid_tweet_missing_text():
+def invalid_tweet_invalid_body():
     """
     Mismatches expected input format for ingestion Lambda.
     """
