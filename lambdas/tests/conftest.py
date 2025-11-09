@@ -6,6 +6,11 @@ Reference: https://docs.pytest.org/en/stable/reference/fixtures.html
 import pytest
 import os
 
+@pytest.fixture(autouse=True)
+def aws_credentials(monkeypatch):
+    """Mock AWS credentials for moto."""
+    monkeypatch.setenv('AWS_DEFAULT_REGION', 'us-west-2')
+
 
 @pytest.fixture
 def mock_env_vars(monkeypatch):
