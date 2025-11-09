@@ -288,6 +288,7 @@ resource "aws_iam_role_policy" "lambda_permissions" {
 resource "aws_cloudwatch_log_group" "ingestion_lambda" {
   name              = "/aws/lambda/${local.name_prefix}-ingestion"
   retention_in_days = 7
+  kms_key_id        = "alias/aws/logs"
 
   tags = local.common_tags
 }
@@ -295,6 +296,7 @@ resource "aws_cloudwatch_log_group" "ingestion_lambda" {
 resource "aws_cloudwatch_log_group" "sentiment_lambda" {
   name              = "/aws/lambda/${local.name_prefix}-sentiment-analysis"
   retention_in_days = 7
+  kms_key_id        = "alias/aws/logs"
 
   tags = local.common_tags
 }
