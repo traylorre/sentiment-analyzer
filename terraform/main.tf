@@ -152,6 +152,12 @@ resource "aws_sqs_queue_policy" "sentiment_analysis" {
   })
 }
 
+resource "aws_sns_topic_subscription" "sqs_target" {
+  topic_arn = aws_sns_topic.tweet_events.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.sentiment_analysis.arn
+}
+
 #----------------------------------------------------------------------------
 # DynamoDB
 #----------------------------------------------------------------------------
