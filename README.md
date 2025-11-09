@@ -12,4 +12,30 @@ Real-time sentiment analysis pipeline on AWS.
 - Terraform
 
 ## Setup
-[Coming Soon]
+
+### Prerequisites
+- Python 3.11.0 (use pyenv: `pyenv install 3.11.0`)
+- Terraform 1.9.0 (use tfenv: `tfenv install 1.9.0`)
+- AWS CLI configured
+
+### Local Development
+```bash
+# Install Python dependencies
+cd lambdas
+pip install -r requirements-dev.txt
+
+# Run tests
+pytest
+
+# Format code
+black .
+pylint lambda_function.py
+```
+
+### Deploy Infrastructure
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
