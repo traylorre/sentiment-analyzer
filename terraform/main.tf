@@ -252,18 +252,24 @@ resource "aws_iam_role_policy" "lambda_permissions" {
         Effect   = "Allow"
         Action   = ["comprehend:DetectSentiment"]
         Resource = "*"
-      },
-      {
-        Sid    = "SQSAccess"
-        Effect = "Allow"
-        Action = [
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage",
-          "sqs:GetQueueAttributes"
-        ]
-        Resource = aws_sqs_queue.sentiment_analysis.arn
       }
     ]
   })
 
+}
+#-----------------------------------------------------------------------------
+# CloudWatch Log Groups
+#-----------------------------------------------------------------------------
+resource "aws_cloudwatch_log_group" "ingestion_lambda" {
+  name              = "/aws/lambda/${local.name_prefix}-ingestion"
+  retention_in_days = 7
+
+  tags = local.common_tags
+}
+
+resource "aws_cloudwatch_log_group" "sentiment_lambda" {
+  name              = "/aws/lambda/${local.name_prefix}-sentiment-analysis"
+  retention_in_days = 7
+
+  tags = local.common_tags
 }
