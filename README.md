@@ -1,6 +1,6 @@
-# Sentiment Analyzer
+# Sentiment Analyzer <img src="https://github.com/traylorre/sentiment-analyzer/actions/workflows/test.yml/badge.svg" align="right" alt="Tests">
 
-Real-time sentiment analysis pipeline on AWS.  ![Tests](https://github.com/traylorre/sentiment-analyzer/actions/workflows/test.yml/badge.svg)
+Real-time sentiment analysis pipeline on AWS.
 ## Status
 🚧 In Development - Phase 1
 
