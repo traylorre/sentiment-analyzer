@@ -151,6 +151,7 @@ resource "aws_sqs_queue_policy" "sentiment_analysis" {
     ]
   })
 }
+
 #----------------------------------------------------------------------------
 # DynamoDB
 #----------------------------------------------------------------------------
@@ -262,6 +263,20 @@ resource "aws_iam_role_policy" "lambda_permissions" {
           "sqs:GetQueueAttributes"
         ]
         Resource = aws_sqs_queue.sentiment_analysis.arn
+      },
+      {
+        Sid    = "CloudWatchLogs"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = [
+          aws_cloudwatch_log_group.ingestion_lambda.arn,
+          aws_cloudwatch_log_group.sentiment_lambda.arn,
+          "${aws_cloudwatch_log_group.ingestion_lambda.arn}:*",
+          "${aws_cloudwatch_log_group.sentiment_lambda.arn}:*"
+        ]
       }
     ]
   })
