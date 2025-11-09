@@ -46,7 +46,7 @@ def test_valid_tweet_returns_200(mock_env_vars, valid_tweet, sns_client):
 
 
 @pytest.mark.unit
-def test_missing_tweet_id_returns_400(mock_env_vars, invalid_tweet_missing_tweet_id, sns_client):
+def test_missing_tweet_id_returns_400(mock_env_vars, tweet_without_id, sns_client):
     """
     GIVEN a tweet missing tweet_id
     WHEN lambda_handler is called
@@ -55,7 +55,7 @@ def test_missing_tweet_id_returns_400(mock_env_vars, invalid_tweet_missing_tweet
     from lambda_function import lambda_handler
 
     # Call handler
-    result = lambda_handler(invalid_tweet_missing_tweet_id, {})
+    result = lambda_handler(tweet_without_id, {})
     assert result['statusCode'] == 400
 
     # Assert error message mentions 'tweet_id'
@@ -65,7 +65,7 @@ def test_missing_tweet_id_returns_400(mock_env_vars, invalid_tweet_missing_tweet
 
 
 @pytest.mark.unit
-def test_missing_text_returns_400(mock_env_vars, invalid_tweet_missing_text, sns_client):
+def test_missing_text_returns_400(mock_env_vars, tweet_without_text, sns_client):
     """
     GIVEN a tweet missing text
     WHEN lambda_handler is called
@@ -74,7 +74,7 @@ def test_missing_text_returns_400(mock_env_vars, invalid_tweet_missing_text, sns
     from lambda_function import lambda_handler
 
     # Call handler
-    result = lambda_handler(invalid_tweet_missing_text, {})
+    result = lambda_handler(tweet_without_text, {})
     assert result['statusCode'] == 400
 
     # Assert error message mentions 'text'
@@ -84,7 +84,7 @@ def test_missing_text_returns_400(mock_env_vars, invalid_tweet_missing_text, sns
 
 
 @pytest.mark.unit
-def test_invalid_json_returns_400(mock_env_vars, invalid_tweet_invalid_body, sns_client):
+def test_invalid_json_returns_400(mock_env_vars, invalid_json_event, sns_client):
     """
     GIVEN invalid JSON in body
     WHEN lambda_handler is called
@@ -93,7 +93,7 @@ def test_invalid_json_returns_400(mock_env_vars, invalid_tweet_invalid_body, sns
     from lambda_function import lambda_handler
 
     # Call handler
-    result = lambda_handler(invalid_tweet_invalid_body, {})
+    result = lambda_handler(invalid_json_event, {})
     assert result['statusCode'] == 400
 
     # Assert error message 

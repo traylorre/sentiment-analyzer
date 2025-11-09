@@ -33,9 +33,9 @@ def valid_tweet():
     }
 
 @pytest.fixture
-def invalid_tweet_missing_tweet_id():
+def tweet_without_id():
     """
-    Mismatches expected input format for ingestion Lambda.
+    Tweet missing required tweet_id field.
     """
     return {
         'text': 'I love AWS Lambda! It makes serverless so easy.',
@@ -44,9 +44,9 @@ def invalid_tweet_missing_tweet_id():
     }
 
 @pytest.fixture
-def invalid_tweet_missing_text():
+def tweet_without_text():
     """
-    Mismatches expected input format for ingestion Lambda.
+    Tweet missing required text field.
     """
     return {
         'tweet_id': '1234567890',
@@ -55,15 +55,12 @@ def invalid_tweet_missing_text():
     }
 
 @pytest.fixture
-def invalid_tweet_invalid_body():
+def invalid_json_event():
     """
-    Mismatches expected input format for ingestion Lambda.
+    Event with malformed JSON body (for API Gateway invocation).
     """
     return {
-        'tweet_id': '1234567890',
-        'text': 'I love AWS Lambda! It makes serverless so easy.',
-        'user_id': 'user_123',
-        'created_at': '2024-01-15T10:30:00Z',  # extra comma is invalid
+        'body': '{invalid json syntax'  # Missing closing brace
     }
 
 @pytest.fixture
