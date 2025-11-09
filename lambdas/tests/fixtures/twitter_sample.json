@@ -1,0 +1,37 @@
+{
+  "text": "RT @PostGradProblem: In preparation for the NFL lockout, I will be spending twice as much time analyzing my fantasy baseball team during ...",
+  "truncated": true,
+  "in_reply_to_user_id": null,
+  "in_reply_to_status_id": null,
+  "favorited": false,
+  "source": "<a href=\"http://twitter.com/\" rel=\"nofollow\">Twitter for iPhone</a>",
+  "in_reply_to_screen_name": null,
+  "in_reply_to_status_id_str": null,
+  "id_str": "54691802283900928",
+  "entities": {
+    "user_mentions": [
+      {
+        "indices": [3, 19],
+        "screen_name": "PostGradProblem",
+        "id_str": "271572434",
+        "name": "PostGradProblems",
+        "id": 271572434
+      }
+    ],
+    "urls": [],
+    "hashtags": []
+  },
+  "contributors": null,
+  "retweeted": false,
+  "in_reply_to_user_id_str": null,
+  "place": null,
+  "retweet_count": 4,
+  "created_at": "Sun Apr 03 23:48:36 +0000 2011",
+  "user": {
+    "screen_name": "OldGREG85",
+    "name": "GG",
+    "id_str": "80177619",
+    "id": 80177619
+  },
+  "id": 54691802283900930
+}
