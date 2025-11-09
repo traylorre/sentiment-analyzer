@@ -1,7 +1,6 @@
 # Sentiment Analyzer
 
-Real-time sentiment analysis pipeline on AWS.
-
+Real-time sentiment analysis pipeline on AWS.  ![Tests](https://github.com/traylorre/sentiment-analyzer/actions/workflows/test.yml/badge.svg)
 ## Status
 🚧 In Development - Phase 1
 
