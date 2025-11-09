@@ -3,13 +3,13 @@ import os
 import boto3
 from datetime import datetime, timezone
 
-# Initialize AWS clients (reused)
-sns_client = boto3.client('sns')
 
 # Environment Variables
 SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']  # Fail fast if missing
 
 def lambda_handler(event, context):
+    sns_client = boto3.client('sns')
+
     try:
         if not isinstance(event, dict):
             return {
