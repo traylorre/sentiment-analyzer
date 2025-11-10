@@ -1,14 +1,16 @@
-.PHONY: setup test format lint clean deploy
+.PHONY: setup test #format lint clean deploy
 
 VENV := venv
 PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
 setup:
+	@echo "----------------------------------------------------------\n"
 	@echo "Setting up development environment..."
 	python3 -m venv $(VENV)
 	$(PIP) install -r lambdas/requirements-dev.txt
-	@echo "✓ Setup complete. Activate with: source venv/bin/activate"
+	@echo "----------------------------------------------------------\n"
+	@echo "\n✓ Setup complete. Activate with: source venv/bin/activate"
 
 test:
 	$(VENV)/bin/pytest lambdas/

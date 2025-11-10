@@ -19,9 +19,20 @@ Real-time sentiment analysis pipeline on AWS.
 
 ### Quick Start
 ```bash
-make setup    # Install dependencies
-make test     # Run tests
-make format   # Format code
-make lint     # Lint code
-make deploy   # Deploy to AWS
+make                        # make setup; make test
+
+source venv/bin/activate    # modifies current shell environment
+                            # to prioritize python 3.11 and its package dependencies
+make deploy                 # requires AWS environment
+```
+### Makefile Commands
+```bash
+make setup                  # Install dependencies
+make test                   # Run tests
+
+make lint                   # Lint code
+make format                 # Format code
+
+make clean                  # remove build artifacts
+make deploy                 # Deploy to AWS
 ```
