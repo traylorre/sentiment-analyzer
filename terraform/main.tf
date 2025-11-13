@@ -14,7 +14,7 @@ provider "aws" {
 
   default_tags { # applies to all AWS resources
     tags = {
-      Project     = "sentiment-analyzer"
+      Project     = var.project_name
       Environment = var.environment
       ManagedBy   = "terraform"
     }
