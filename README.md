@@ -1,3 +1,9 @@
+⚠️ **This project represents my initial development approach before learning spec-driven development.**
+
+**See [sentiment-analyzer-gsk](https://github.com/traylorre/sentiment-analyzer-gsk) for the improved version** built with GitHub Spec Kit from the ground up, demonstrating proper spec → plan → implement workflow.
+
+This repo remains public to show my learning journey and evolution as a developer.
+
 # Sentiment Analyzer <img src="https://github.com/traylorre/sentiment-analyzer/actions/workflows/test.yml/badge.svg" align="right" alt="Tests">
 
 Real-time sentiment analysis pipeline on AWS.
